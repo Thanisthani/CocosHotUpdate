@@ -1,0 +1,7 @@
+{
+  "packageUrl": "https://thanisthani.github.io/CocosHotUpdate/config/",
+  "remoteVersionUrl": "https://thanisthani.github.io/CocosHotUpdate/config/version.manifest",
+  "remoteManifestUrl": "https://thanisthani.github.io/CocosHotUpdate/config/project.manifest",
+  "version": "1.0.0",
+  "engineVersion": "3.0.0"
+}
