@@ -2,7 +2,7 @@
   "packageUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/",
   "remoteVersionUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/version.manifest",
   "remoteManifestUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/project.manifest",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "assets": {
     "application.js": {
       "md5": "e56639acc2fadbe3cdd20ed959694c80",
@@ -21,19 +21,19 @@
       "size": 39548
     },
     "assets/main/cc.config.json": {
-      "md5": "3a63cdb132ba77d674165797d6052b11",
+      "md5": "193f33083ed12f6c2419f9f33ac56415",
       "size": 725
     },
-    "assets/main/import/09/092a4c5b3.json": {
-      "md5": "fa6d03f9f1cb4ce85b9ddf36bf56b8fe",
-      "size": 2948
+    "assets/main/import/0a/0abfc91e1.json": {
+      "md5": "131834333d8457749dffbb50e4ec0538",
+      "size": 2952
     },
-    "assets/main/import/1a/1a8f5957-2663-4094-b362-c0e8a33bdb10.json": {
+    "assets/main/import/22/22a22708-11d9-4581-8564-751935cdd74c.json": {
       "md5": "a253314ec7107d95345d7fc89b8d7bb5",
       "size": 72
     },
-    "assets/main/import/1a/1a8f5957-2663-4094-b362-c0e8a33bdb10@6c48a.json": {
-      "md5": "4fa990a1069fbf353e9cf5358547f5b9",
+    "assets/main/import/22/22a22708-11d9-4581-8564-751935cdd74c@6c48a.json": {
+      "md5": "2c15e07fa8b0bbd0c9d00c0c25d27380",
       "size": 104
     },
     "assets/main/import/ba/ba21476f-2866-4f81-9c4d-6e359316e448.json": {
@@ -45,15 +45,15 @@
       "size": 480
     },
     "assets/main/index.js": {
-      "md5": "ab9a9a4a221cf84b4df7efacbba01d6f",
-      "size": 8758
+      "md5": "e8a96b4d5e581a6507da892bfa4224ab",
+      "size": 8732
     },
-    "assets/main/native/1a/1a8f5957-2663-4094-b362-c0e8a33bdb10.png": {
-      "md5": "7994ba8943b57af0e4d5ce619c78d85b",
-      "size": 33008
+    "assets/main/native/22/22a22708-11d9-4581-8564-751935cdd74c.png": {
+      "md5": "cb181f1870ecc94fd2fc38cfff337826",
+      "size": 25534
     },
     "assets/main/native/f6/f68fd36f-24da-4868-82b3-35759975edff.manifest": {
-      "md5": "085563256da61542b38e1988d02c4fb9",
+      "md5": "4918526a5aed3526f08b4f3e5825d13c",
       "size": 2964
     },
     "jsb-adapter/engine-adapter.js": {
