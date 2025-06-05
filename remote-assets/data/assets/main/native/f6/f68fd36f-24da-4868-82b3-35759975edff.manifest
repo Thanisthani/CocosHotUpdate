@@ -2,7 +2,7 @@
   "packageUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/",
   "remoteVersionUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/version.manifest",
   "remoteManifestUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/project.manifest",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "assets": {
     "application.js": {
       "md5": "e56639acc2fadbe3cdd20ed959694c80",
@@ -45,15 +45,15 @@
       "size": 480
     },
     "assets/main/index.js": {
-      "md5": "fb35682025abdd8ff67540a131883db0",
-      "size": 8843
+      "md5": "31f1e4acd5020a8386e9215b85c09493",
+      "size": 8822
     },
     "assets/main/native/22/22a22708-11d9-4581-8564-751935cdd74c.png": {
       "md5": "cb181f1870ecc94fd2fc38cfff337826",
       "size": 25534
     },
     "assets/main/native/f6/f68fd36f-24da-4868-82b3-35759975edff.manifest": {
-      "md5": "45dd6fa3f3dda609d6684ed235ab7ad9",
+      "md5": "ed2cf2a8182acc6956903c59ed504f43",
       "size": 2964
     },
     "jsb-adapter/engine-adapter.js": {
