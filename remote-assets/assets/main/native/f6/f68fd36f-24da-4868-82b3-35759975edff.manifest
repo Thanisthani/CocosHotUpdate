@@ -45,15 +45,15 @@
       "size": 480
     },
     "assets/main/index.js": {
-      "md5": "9a02a513b688a7c1e7d55bec8a882e50",
-      "size": 10938
+      "md5": "498369b2624d272975e0f65323a478f6",
+      "size": 10976
     },
     "assets/main/native/22/22a22708-11d9-4581-8564-751935cdd74c.png": {
       "md5": "cb181f1870ecc94fd2fc38cfff337826",
       "size": 25534
     },
     "assets/main/native/f6/f68fd36f-24da-4868-82b3-35759975edff.manifest": {
-      "md5": "d67f7b91c689a2aaa8764e57ecec1c7c",
+      "md5": "35dd893ae67967a0c52b8a01a234fa58",
       "size": 2965
     },
     "jsb-adapter/engine-adapter.js": {
