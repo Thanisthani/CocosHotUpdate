@@ -65,8 +65,8 @@
       "size": 480
     },
     "assets/main/index.js": {
-      "md5": "821007858866592650cc54ac93465dc3",
-      "size": 10050
+      "md5": "abb0e8c7beb31523cba867314f410c1b",
+      "size": 10042
     },
     "assets/main/native/20/20835ba4-6145-4fbc-a58a-051ce700aa3e.png": {
       "md5": "90cf45d059d0408bec327f66eae5764c",
@@ -93,8 +93,8 @@
       "size": 1177
     },
     "assets/main/native/f6/f68fd36f-24da-4868-82b3-35759975edff.manifest": {
-      "md5": "a72291b44d8397b35d7a6ccf0746e5bd",
-      "size": 4398
+      "md5": "9d07a8bbecbcc1b62d4a8904db155e3f",
+      "size": 5110
     },
     "jsb-adapter/engine-adapter.js": {
       "md5": "d7c197e587a97d0240e760508b009865",
