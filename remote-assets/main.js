@@ -4,18 +4,6 @@
 window.self = window;
 require("src/system.bundle.js");
 
-if (jsb && jsb.fileUtils && jsb.localStorage) {
-    const hotUpdatePath = jsb.localStorage.getItem('hotUpdatePath');
-    if (hotUpdatePath && jsb.fileUtils.isDirectoryExist(hotUpdatePath)) {
-        const searchPaths = jsb.fileUtils.getSearchPaths();
-        if (!searchPaths.includes(hotUpdatePath)) {
-            searchPaths.unshift(hotUpdatePath);
-            jsb.fileUtils.setSearchPaths(searchPaths);
-        }
-        console.log("Hot update search paths applied:", searchPaths);
-    }
-}
-
 const importMapJson = jsb.fileUtils.getStringFromFile("src/import-map.json");
 const importMap = JSON.parse(importMapJson);
 System.warmup({
