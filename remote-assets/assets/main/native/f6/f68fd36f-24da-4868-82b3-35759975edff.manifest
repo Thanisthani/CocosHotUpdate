@@ -65,8 +65,8 @@
       "size": 480
     },
     "assets/main/index.js": {
-      "md5": "abb0e8c7beb31523cba867314f410c1b",
-      "size": 10042
+      "md5": "d5ed651f192d8c1c5612f9ebec160ddc",
+      "size": 10648
     },
     "assets/main/native/20/20835ba4-6145-4fbc-a58a-051ce700aa3e.png": {
       "md5": "90cf45d059d0408bec327f66eae5764c",
@@ -93,8 +93,8 @@
       "size": 1177
     },
     "assets/main/native/f6/f68fd36f-24da-4868-82b3-35759975edff.manifest": {
-      "md5": "9d07a8bbecbcc1b62d4a8904db155e3f",
-      "size": 5110
+      "md5": "5e17d0c4b26057738a75befd99097c0a",
+      "size": 4398
     },
     "jsb-adapter/engine-adapter.js": {
       "md5": "d7c197e587a97d0240e760508b009865",
@@ -109,8 +109,8 @@
       "size": 840
     },
     "src/chunks/bundle.js": {
-      "md5": "5090af38add59c9ee667e7aa7630e033",
-      "size": 976
+      "md5": "403033ec7c13336dfa4a5b21ad8040e3",
+      "size": 991
     },
     "src/cocos-js/cc.js": {
       "md5": "2b73eb923056ca6eddef8cbc89ff6f5a",
