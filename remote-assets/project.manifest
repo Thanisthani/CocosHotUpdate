@@ -2,13 +2,13 @@
   "packageUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/",
   "remoteVersionUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/version.manifest",
   "remoteManifestUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/project.manifest",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "assets": {
-    "application.b3dc5.js": {
-      "md5": "b3dc5233dcc69f4e990e328b9047f3da",
+    "application.aa415.js": {
+      "md5": "aa415787d37f95ae7cddc9abf783d031",
       "size": 1275,
       "compressed": false,
-      "path": "application.b3dc5.js"
+      "path": "application.aa415.js"
     },
     "assets/internal/cc.config.40b75.json": {
       "md5": "93dc02d65d6e3762d394dfd88cf30547",
@@ -28,11 +28,11 @@
       "compressed": false,
       "path": "assets/internal/index.40b75.js"
     },
-    "assets/main/cc.config.c828d.json": {
-      "md5": "5d61815680c63bef25a6c7b47c95dacd",
+    "assets/main/cc.config.c6b23.json": {
+      "md5": "e76b004318ac52a37bb27bd45218e7d2",
       "size": 1390,
       "compressed": false,
-      "path": "assets/main/cc.config.c828d.json"
+      "path": "assets/main/cc.config.c6b23.json"
     },
     "assets/main/import/03/03ec94122.4c3f0.json": {
       "md5": "4c3f0b5e16f7fb428e36bec1deb2bc6e",
@@ -94,11 +94,11 @@
       "compressed": false,
       "path": "assets/main/import/fd/fd8ec536-a354-4a17-9c74-4f3883c378c8.731f4.json"
     },
-    "assets/main/index.c828d.js": {
-      "md5": "b50f67a36a0f9f1a8d3d58201b5fbc48",
-      "size": 9801,
+    "assets/main/index.c6b23.js": {
+      "md5": "9963db08181da1a777a4c47d0afcf801",
+      "size": 9811,
       "compressed": false,
-      "path": "assets/main/index.c828d.js"
+      "path": "assets/main/index.c6b23.js"
     },
     "assets/main/native/1a/1a8f5957-2663-4094-b362-c0e8a33bdb10.7994b.png": {
       "md5": "7994ba8943b57af0e4d5ce619c78d85b",
@@ -149,7 +149,7 @@
       "path": "jsb-adapter/web-adapter.js"
     },
     "main.js": {
-      "md5": "f17833d7a4ca996bfddd5ac1b1fb0745",
+      "md5": "fd84d606de19359be0f9d2b38bb88006",
       "size": 864,
       "compressed": false,
       "path": "main.js"
@@ -178,11 +178,11 @@
       "compressed": false,
       "path": "src/import-map.96fa8.json"
     },
-    "src/settings.c01f4.json": {
-      "md5": "c01f4e7255580b35080dcdcd3786231f",
+    "src/settings.aef48.json": {
+      "md5": "aef488169f68003c01ef70abe2a8ae3e",
       "size": 21323,
       "compressed": false,
-      "path": "src/settings.c01f4.json"
+      "path": "src/settings.aef48.json"
     },
     "src/system.bundle.f45da.js": {
       "md5": "f45da0108c6bc0747a05f0f669023838",

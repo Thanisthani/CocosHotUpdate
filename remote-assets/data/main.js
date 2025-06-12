@@ -14,7 +14,7 @@ System.warmup({
     },
 });
 
-System.import('./application.b3dc5.js')
+System.import('./application.aa415.js')
 .then(({ Application }) => {
     return new Application();
 }).then((application) => {
