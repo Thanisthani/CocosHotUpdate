@@ -26,7 +26,7 @@ System.warmup({
     },
 });
 
-System.import('./application.de615.js')
+System.import('./application.86f6c.js')
 .then(({ Application }) => {
     return new Application();
 }).then((application) => {

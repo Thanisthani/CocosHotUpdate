@@ -2,10 +2,10 @@
   "packageUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/",
   "remoteVersionUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/version.manifest",
   "remoteManifestUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/project.manifest",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "assets": {
-    "application.40e08.js": {
-      "md5": "40e0858ccbfba6c5c6b04c1cc2328d31",
+    "application.86f6c.js": {
+      "md5": "86f6ce7997b6262da82ae36787c8d7aa",
       "size": 1275,
       "compressed": false
     },
@@ -24,8 +24,8 @@
       "size": 39548,
       "compressed": false
     },
-    "assets/main/cc.config.9d925.json": {
-      "md5": "8e6fed5e10969f4b920558a7390b85b1",
+    "assets/main/cc.config.a70f9.json": {
+      "md5": "eb3f92ced90cf7e16e4ddc86254dead2",
       "size": 1390,
       "compressed": false
     },
@@ -79,9 +79,9 @@
       "size": 480,
       "compressed": false
     },
-    "assets/main/index.9d925.js": {
-      "md5": "c32732e0991174d0be5c41eee6cd01cd",
-      "size": 10290,
+    "assets/main/index.a70f9.js": {
+      "md5": "1f27b2ba72c7697449c2ad48c0b18451",
+      "size": 10280,
       "compressed": false
     },
     "assets/main/native/1a/1a8f5957-2663-4094-b362-c0e8a33bdb10.7994b.png": {
@@ -125,8 +125,8 @@
       "compressed": false
     },
     "main.js": {
-      "md5": "d29bce73d2870e990c2ef1e5b10a4378",
-      "size": 1355,
+      "md5": "6015b221f8a2f27e6ff94db99533cf8d",
+      "size": 1375,
       "compressed": false
     },
     "src/chunks/bundle.5090a.js": {
@@ -149,8 +149,8 @@
       "size": 43,
       "compressed": false
     },
-    "src/settings.dfe1e.json": {
-      "md5": "dfe1ec67fd6da269a20e9b64e680ae49",
+    "src/settings.0a9c2.json": {
+      "md5": "0a9c2e2280ab284973c2cce9bd9c6c0f",
       "size": 21323,
       "compressed": false
     },
