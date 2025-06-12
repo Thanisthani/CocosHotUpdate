@@ -8,8 +8,8 @@ System.register([], function (_export, _context) {
     execute: function () {
       _export("Application", Application = class Application {
         constructor() {
-          this.settingsPath = 'src/settings.06919.json';
-          this.showFPS = true;
+          this.settingsPath = 'src/settings.6ae66.json';
+          this.showFPS = false;
         }
         init(engine) {
           cc = engine;
@@ -25,7 +25,7 @@ System.register([], function (_export, _context) {
         }
         start() {
           return cc.game.init({
-            debugMode: true ? cc.DebugMode.INFO : cc.DebugMode.ERROR,
+            debugMode: false ? cc.DebugMode.INFO : cc.DebugMode.ERROR,
             settingsPath: this.settingsPath,
             overrideSettings: {
               // assets: {
