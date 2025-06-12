@@ -4,6 +4,18 @@
 window.self = window;
 require("src/system.bundle.f45da.js");
 
+if (jsb && jsb.fileUtils && jsb.localStorage) {
+    const hotUpdatePath = jsb.localStorage.getItem('hotUpdatePath');
+    if (hotUpdatePath && jsb.fileUtils.isDirectoryExist(hotUpdatePath)) {
+        const searchPaths = jsb.fileUtils.getSearchPaths();
+        if (!searchPaths.includes(hotUpdatePath)) {
+            searchPaths.unshift(hotUpdatePath);
+            jsb.fileUtils.setSearchPaths(searchPaths);
+        }
+        console.log("Hot update search paths applied:", searchPaths);
+    }
+  }
+  
 const importMapJson = jsb.fileUtils.getStringFromFile("src/import-map.96fa8.json");
 const importMap = JSON.parse(importMapJson);
 System.warmup({
@@ -14,7 +26,7 @@ System.warmup({
     },
 });
 
-System.import('./application.aa415.js')
+System.import('./application.de615.js')
 .then(({ Application }) => {
     return new Application();
 }).then((application) => {
