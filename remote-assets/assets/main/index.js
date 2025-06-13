@@ -23,7 +23,7 @@ System.register("chunks:///_virtual/GameContent.ts", ['./rollupPluginModLoBabelH
           _initializerDefineProperty(this, "label", _descriptor, this);
         }
         onLoad() {
-          console.log("onLoad is called version 1.0.3");
+          console.log("onLoad is called version 1.0.6");
         }
       }, _descriptor = _applyDecoratedDescriptor(_class2.prototype, "label", [_dec2], {
         configurable: true,
