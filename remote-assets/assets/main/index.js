@@ -24,9 +24,6 @@ System.register("chunks:///_virtual/GameContent.ts", ['./rollupPluginModLoBabelH
         }
         onLoad() {
           console.log("onLoad is called version 1.0.3");
-          if (this.label) {
-            this.label.string = "Hot";
-          }
         }
       }, _descriptor = _applyDecoratedDescriptor(_class2.prototype, "label", [_dec2], {
         configurable: true,
