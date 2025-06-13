@@ -250,8 +250,9 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           this.storagePath = native.fileUtils && native.fileUtils.getWritablePath ? native.fileUtils.getWritablePath() + 'hotUpdatePath/' : '/hotUpdatePath/';
           this.initHotUpdate();
           this.setupUI();
-          this.checkForPendingUpdate();
+          // this.checkForPendingUpdate();
         }
+
         checkForPendingUpdate() {
           // Check if there's a pending hot update that needs to be applied
           const hotUpdateReady = sys.localStorage.getItem('hotUpdateReady');
@@ -269,7 +270,7 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
             console.log('Applying hot update from:', hotUpdatePath);
 
             // 1. Clear all cached assets first
-            this.clearAssetCache();
+            // this.clearAssetCache();
 
             // 2. Update search paths to prioritize hot update directory
             this.updateSearchPaths(hotUpdatePath);
@@ -560,7 +561,7 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           // Set flags for next startup
           sys.localStorage.setItem('hotUpdateReady', 'true');
           sys.localStorage.setItem('hotUpdatePath', this.storagePath);
-          this.onUpdateFinished(true, false); // Don't need restart since we applied immediately
+          this.onUpdateFinished(true, true); // Don't need restart since we applied immediately
         }
 
         handleUpdateProgress(event) {
