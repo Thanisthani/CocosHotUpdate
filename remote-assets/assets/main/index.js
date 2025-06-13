@@ -327,17 +327,16 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
 
           // Method 1: Reload main bundle
 
-          this.reloadMainBundle();
+          // this.reloadMainBundle();
 
           // Method 2: Reload specific updated assets (if you know which ones)
           // this.reloadSpecificAssets();
 
           // Method 3: Force reload current scene after a delay
-          // this.scheduleOnce(() => {
-          //     this.reloadCurrentScene();
-          // }, 30);
+          this.scheduleOnce(() => {
+            this.reloadCurrentScene();
+          }, 30);
         }
-
         reloadMainBundle() {
           const mainBundle = assetManager.getBundle('main');
           if (mainBundle) {
