@@ -25,7 +25,7 @@ System.register("chunks:///_virtual/GameContent.ts", ['./rollupPluginModLoBabelH
         onLoad() {
           console.log("onLoad is called version 1.0.3");
           if (this.label) {
-            this.label.string = "Inital one update version";
+            this.label.string = "Hot update working";
           }
         }
       }, _descriptor = _applyDecoratedDescriptor(_class2.prototype, "label", [_dec2], {
@@ -332,7 +332,7 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
 
           this.scheduleOnce(() => {
             this.reloadMainBundle();
-          }, 30);
+          }, 4.0);
 
           // Method 2: Reload specific updated assets (if you know which ones)
           // this.reloadSpecificAssets();
