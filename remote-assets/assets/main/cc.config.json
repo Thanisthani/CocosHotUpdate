@@ -1,1 +1,81 @@
-{"importBase":"import","nativeBase":"native","name":"main","deps":[],"uuids":["0ae4ae597","0c97d718e","20g1ukYUVPvKWKBRznAKo+","57fzCoaANEP6ZZ6Vyex///","20g1ukYUVPvKWKBRznAKo+@6c48a","20g1ukYUVPvKWKBRznAKo+@f9941","22oicIEdlFgYVkdRk1zddM","22oicIEdlFgYVkdRk1zddM@6c48a","22oicIEdlFgYVkdRk1zddM@f9941","24pwTaKGdEbY0aXpIMdeCd","24pwTaKGdEbY0aXpIMdeCd@6c48a","24pwTaKGdEbY0aXpIMdeCd@f9941","54TknWPwVPqJqeCR+Y/Czo","54TknWPwVPqJqeCR+Y/Czo@6c48a","54TknWPwVPqJqeCR+Y/Czo@f9941","95EkngnxZFbYuFpsqVTaFr","95EkngnxZFbYuFpsqVTaFr@6c48a","95EkngnxZFbYuFpsqVTaFr@f9941","9f2QDdIhtPiY8s+6NCQ8g1","9f2QDdIhtPiY8s+6NCQ8g1@6c48a","9f2QDdIhtPiY8s+6NCQ8g1@f9941","baIUdvKGZPgZxNbjWTFuRI","f6j9NvJNpIaIKzNXWZde3/","fdjsU2o1RKF5x0TziDw3jI"],"paths":{"3":["db:/assets/Scenes/scene",0,1],"21":["db:/internal/physics/default-physics-material",2,1],"23":["db:/internal/default_renderpipeline/builtin-forward",1,1]},"scenes":{"db://assets/Scenes/scene.scene":3},"packs":{"0ae4ae597":[19,7,10,13,4,16],"0c97d718e":[5,8,11,14,3,17,20,22]},"versions":{"import":[],"native":[]},"redirect":[],"debug":false,"extensionMap":{},"hasPreloadScript":true,"dependencyRelationships":{},"types":["cc.SceneAsset","cc.RenderPipeline","cc.PhysicsMaterial"]}
+{
+    "importBase": "import",
+    "nativeBase": "native",
+    "name": "main",
+    "deps": [],
+    "uuids": [
+        "0ae4ae597",
+        "0c97d718e",
+        "20835ba4-6145-4fbc-a58a-051ce700aa3e",
+        "20835ba4-6145-4fbc-a58a-051ce700aa3e@6c48a",
+        "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+        "22a22708-11d9-4581-8564-751935cdd74c",
+        "22a22708-11d9-4581-8564-751935cdd74c@6c48a",
+        "22a22708-11d9-4581-8564-751935cdd74c@f9941",
+        "24a704da-2867-446d-8d1a-5e920c75e09d",
+        "24a704da-2867-446d-8d1a-5e920c75e09d@6c48a",
+        "24a704da-2867-446d-8d1a-5e920c75e09d@f9941",
+        "544e49d6-3f05-4fa8-9a9e-091f98fc2ce8",
+        "544e49d6-3f05-4fa8-9a9e-091f98fc2ce8@6c48a",
+        "544e49d6-3f05-4fa8-9a9e-091f98fc2ce8@f9941",
+        "577f30a8-6803-443f-a659-e95c9ec7ffff",
+        "951249e0-9f16-456d-8b85-a6ca954da16b",
+        "951249e0-9f16-456d-8b85-a6ca954da16b@6c48a",
+        "951249e0-9f16-456d-8b85-a6ca954da16b@f9941",
+        "9fd900dd-221b-4f89-8f2c-fba34243c835",
+        "9fd900dd-221b-4f89-8f2c-fba34243c835@6c48a",
+        "9fd900dd-221b-4f89-8f2c-fba34243c835@f9941",
+        "ba21476f-2866-4f81-9c4d-6e359316e448",
+        "f68fd36f-24da-4868-82b3-35759975edff",
+        "fd8ec536-a354-4a17-9c74-4f3883c378c8"
+    ],
+    "paths": {
+        "577f30a8-6803-443f-a659-e95c9ec7ffff": [
+            "db:/assets/Scenes/scene",
+            "cc.SceneAsset",
+            1
+        ],
+        "fd8ec536-a354-4a17-9c74-4f3883c378c8": [
+            "db:/internal/default_renderpipeline/builtin-forward",
+            "cc.RenderPipeline",
+            1
+        ],
+        "ba21476f-2866-4f81-9c4d-6e359316e448": [
+            "db:/internal/physics/default-physics-material",
+            "cc.PhysicsMaterial",
+            1
+        ]
+    },
+    "scenes": {
+        "db://assets/Scenes/scene.scene": "577f30a8-6803-443f-a659-e95c9ec7ffff"
+    },
+    "packs": {
+        "0ae4ae597": [
+            "9fd900dd-221b-4f89-8f2c-fba34243c835@6c48a",
+            "22a22708-11d9-4581-8564-751935cdd74c@6c48a",
+            "24a704da-2867-446d-8d1a-5e920c75e09d@6c48a",
+            "544e49d6-3f05-4fa8-9a9e-091f98fc2ce8@6c48a",
+            "20835ba4-6145-4fbc-a58a-051ce700aa3e@6c48a",
+            "951249e0-9f16-456d-8b85-a6ca954da16b@6c48a"
+        ],
+        "0c97d718e": [
+            "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+            "22a22708-11d9-4581-8564-751935cdd74c@f9941",
+            "24a704da-2867-446d-8d1a-5e920c75e09d@f9941",
+            "544e49d6-3f05-4fa8-9a9e-091f98fc2ce8@f9941",
+            "577f30a8-6803-443f-a659-e95c9ec7ffff",
+            "951249e0-9f16-456d-8b85-a6ca954da16b@f9941",
+            "9fd900dd-221b-4f89-8f2c-fba34243c835@f9941",
+            "f68fd36f-24da-4868-82b3-35759975edff"
+        ]
+    },
+    "versions": {
+        "import": [],
+        "native": []
+    },
+    "redirect": [],
+    "debug": true,
+    "extensionMap": {},
+    "hasPreloadScript": true,
+    "dependencyRelationships": {}
+}
