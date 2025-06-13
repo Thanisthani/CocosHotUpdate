@@ -25,7 +25,7 @@ System.register("chunks:///_virtual/GameContent.ts", ['./rollupPluginModLoBabelH
         onLoad() {
           console.log("onLoad is called version 1.0.3");
           if (this.label) {
-            this.label.string = "Hot update working";
+            this.label.string = "Hot";
           }
         }
       }, _descriptor = _applyDecoratedDescriptor(_class2.prototype, "label", [_dec2], {
@@ -330,19 +330,16 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
 
           // Method 1: Reload main bundle
 
-          this.scheduleOnce(() => {
-            this.reloadMainBundle();
-          }, 4.0);
+          this.reloadMainBundle();
 
           // Method 2: Reload specific updated assets (if you know which ones)
           // this.reloadSpecificAssets();
 
           // Method 3: Force reload current scene after a delay
-          // this.scheduleOnce(() => {
-          //     this.reloadCurrentScene();
-          // }, 30);
+          this.scheduleOnce(() => {
+            this.reloadCurrentScene();
+          }, 30);
         }
-
         reloadMainBundle() {
           const mainBundle = assetManager.getBundle('main');
           if (mainBundle) {
@@ -568,8 +565,7 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           // Set flags for next startup
           sys.localStorage.setItem('hotUpdateReady', 'true');
           sys.localStorage.setItem('hotUpdatePath', this.storagePath);
-
-          // this.onUpdateFinished(true, true); // Don't need restart since we applied immediately
+          this.onUpdateFinished(true, true); // Don't need restart since we applied immediately
         }
 
         handleUpdateProgress(event) {
