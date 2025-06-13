@@ -2,7 +2,7 @@
   "packageUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/",
   "remoteVersionUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/version.manifest",
   "remoteManifestUrl": "https://thanisthani.github.io/CocosHotUpdate/remote-assets/project.manifest",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "assets": {
     "application.js": {
       "md5": "e56639acc2fadbe3cdd20ed959694c80",
@@ -80,8 +80,8 @@
       "compressed": false
     },
     "assets/main/index.js": {
-      "md5": "5ba5d7a93d97d74fe7937688d64f710a",
-      "size": 13191,
+      "md5": "4744cb1dc631865a2b7be222241a51a5",
+      "size": 13230,
       "compressed": false
     },
     "assets/main/native/1a/1a8f5957-2663-4094-b362-c0e8a33bdb10.png": {
