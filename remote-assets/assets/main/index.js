@@ -25,7 +25,7 @@ System.register("chunks:///_virtual/GameContent.ts", ['./rollupPluginModLoBabelH
         onLoad() {
           console.log("onLoad is called version 1.0.3");
           if (this.label) {
-            this.label.string = "Inital one ";
+            this.label.string = "Inital one Worked";
           }
         }
       }, _descriptor = _applyDecoratedDescriptor(_class2.prototype, "label", [_dec2], {
