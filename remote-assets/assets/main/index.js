@@ -327,9 +327,7 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
 
           // Method 1: Reload main bundle
 
-          this.scheduleOnce(() => {
-            this.reloadMainBundle();
-          }, 30);
+          this.reloadMainBundle();
 
           // Method 2: Reload specific updated assets (if you know which ones)
           // this.reloadSpecificAssets();
