@@ -23,7 +23,7 @@ System.register("chunks:///_virtual/GameContent.ts", ['./rollupPluginModLoBabelH
           _initializerDefineProperty(this, "label", _descriptor, this);
         }
         onLoad() {
-          console.log("onLoad is called ");
+          console.log("onLoad is called updated ");
         }
       }, _descriptor = _applyDecoratedDescriptor(_class2.prototype, "label", [_dec2], {
         configurable: true,
@@ -192,8 +192,8 @@ System.register("chunks:///_virtual/main", ['./GameContent.ts', './HotUpdateSear
   };
 });
 
-System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './env'], function (exports) {
-  var _applyDecoratedDescriptor, _initializerDefineProperty, cclegacy, Asset, Label, ProgressBar, Button, _decorator, Component, native, sys, assetManager, director, game, NATIVE;
+System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc'], function (exports) {
+  var _applyDecoratedDescriptor, _initializerDefineProperty, cclegacy, Asset, Label, ProgressBar, Button, _decorator, Component, native, sys, assetManager, director, game;
   return {
     setters: [function (module) {
       _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
@@ -211,8 +211,6 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
       assetManager = module.assetManager;
       director = module.director;
       game = module.game;
-    }, function (module) {
-      NATIVE = module.NATIVE;
     }],
     execute: function () {
       var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5;
@@ -249,32 +247,12 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           this.updateListener = null;
         }
         onLoad() {
-          // Set storage path with proper cleanup
           this.storagePath = native.fileUtils && native.fileUtils.getWritablePath ? native.fileUtils.getWritablePath() + 'hotUpdatePath/' : '/hotUpdatePath/';
-
-          // Clear any existing files in the storage path
-          if (native.fileUtils.isDirectoryExist(this.storagePath)) {
-            try {
-              const files = native.fileUtils.listFiles(this.storagePath);
-              if (files && files.length > 0) {
-                files.forEach(file => {
-                  const filePath = this.storagePath + file;
-                  if (native.fileUtils.isFileExist(filePath)) {
-                    native.fileUtils.removeFile(filePath);
-                  }
-                });
-              }
-            } catch (error) {
-              console.error('Error cleaning up storage path:', error);
-            }
-          }
-
-          // Initialize with delay
-          this.scheduleOnce(() => {
-            this.initHotUpdate();
-            this.setupUI();
-          }, 0.5);
+          this.initHotUpdate();
+          this.setupUI();
+          // this.checkForPendingUpdate();
         }
+
         checkForPendingUpdate() {
           // Check if there's a pending hot update that needs to be applied
           const hotUpdateReady = sys.localStorage.getItem('hotUpdateReady');
@@ -307,48 +285,25 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
         }
         clearAssetCache() {
           try {
-            // Release all assets first
-            assetManager.releaseAll();
-
-            // Clear any cached files in temp directory
-            const tempPath = native.fileUtils.getWritablePath() + 'temp/';
-            if (native.fileUtils.isDirectoryExist(tempPath)) {
-              const tempFiles = native.fileUtils.listFiles(tempPath);
-              if (tempFiles) {
-                tempFiles.forEach(file => {
-                  try {
-                    native.fileUtils.removeFile(file);
-                  } catch (e) {
-                    console.error('Failed to remove temp file:', file, e);
-                  }
-                });
-              }
-            }
-
-            // Force garbage collection if possible
-            if (NATIVE && native.garbageCollect) {
-              native.garbageCollect();
-            }
-
-            // Clear texture cache
-            if (assetManager.assets) {
+            // Clear asset manager cache
+            if (assetManager && assetManager.assets) {
+              console.log('Clearing asset cache...');
               assetManager.assets.clear();
             }
 
             // Clear bundle cache
             if (assetManager.bundles) {
               assetManager.bundles.forEach((bundle, name) => {
+                console.log('Releasing bundle:', name);
                 bundle.releaseAll();
               });
             }
 
-            // Wait for cleanup to complete
-            this.scheduleOnce(() => {
-              // Additional cleanup if needed
-              if (NATIVE && native.garbageCollect) {
-                native.garbageCollect();
-              }
-            }, 0.5);
+            // Clear any cached files in the hot update directory
+            const tempPath = this.storagePath + '_temp';
+            if (native.fileUtils.isDirectoryExist(tempPath)) {
+              native.fileUtils.removeDirectory(tempPath);
+            }
           } catch (error) {
             console.error('Error clearing asset cache:', error);
           }
@@ -372,94 +327,35 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           sys.localStorage.setItem('HotUpdateSearchPaths', JSON.stringify(searchPaths));
         }
         reloadUpdatedAssets() {
+          console.log('Reloading updated assets...');
           try {
-            const currentScene = director.getScene();
-            if (!currentScene) {
-              console.error('No current scene found');
-              return;
-            }
-
             // Verify files exist before reloading
             const files = native.fileUtils.listFiles(this.storagePath);
+            console.log('Files to reload:', files);
             if (!files || files.length === 0) {
-              console.error('No files found in storage path after update');
-              this.statusLabel.string = 'Update failed: No files found';
+              console.error('No files found for reload');
               return;
             }
-            console.log('Files in storage path:', files);
 
-            // Store current scene name
-            const sceneName = currentScene.name;
-
-            // Destroy current scene
-            currentScene.destroy();
-
-            // Add a small delay before loading new scene
+            // Reload current scene
             this.scheduleOnce(() => {
-              // Preload the scene to ensure assets are loaded
-              director.preloadScene(sceneName, (err, scene) => {
-                if (err) {
-                  console.error('Failed to preload scene:', err);
-                  this.statusLabel.string = 'Failed to preload scene';
-                  return;
-                }
-
-                // Wait for assets to be fully loaded
-                this.scheduleOnce(() => {
-                  // Now load the scene
-                  director.loadScene(sceneName, err => {
-                    if (err) {
-                      console.error('Failed to reload scene:', err);
-                      this.statusLabel.string = 'Failed to reload scene';
-                      return;
-                    }
-
-                    // Wait for scene to be fully initialized
-                    this.scheduleOnce(() => {
-                      const newScene = director.getScene();
-                      if (newScene) {
-                        var _newScene$getChildByN;
-                        // Disable all nodes first
-                        const allNodes = ((_newScene$getChildByN = newScene.getChildByName('Canvas')) == null ? void 0 : _newScene$getChildByN.children) || [];
-                        allNodes.forEach(node => {
-                          node.active = false;
-                        });
-
-                        // Wait for textures to be ready
-                        this.scheduleOnce(() => {
-                          // Re-enable nodes one by one with delay
-                          allNodes.forEach((node, index) => {
-                            this.scheduleOnce(() => {
-                              node.active = true;
-                            }, index * 0.1); // Stagger the activation
-                          });
-
-                          console.log('Scene reloaded successfully');
-                          this.statusLabel.string = 'Update completed successfully';
-                        }, 1.0);
-                      }
-                    }, 1.0);
-                  });
-                }, 1.0);
-              });
-            }, 1.0);
+              const currentScene = director.getScene();
+              if (currentScene) {
+                console.log('Reloading current scene:', currentScene.name);
+                director.loadScene(currentScene.name, err => {
+                  if (err) {
+                    console.error('Failed to reload scene:', err);
+                  } else {
+                    console.log('Scene reloaded successfully with updated assets');
+                  }
+                });
+              }
+            }, 0.5);
           } catch (error) {
-            console.error('Error reloading assets:', error);
-            this.statusLabel.string = 'Failed to reload assets';
+            console.error('Error in reloadUpdatedAssets:', error);
           }
         }
         initHotUpdate() {
-          try {
-            // Add a small delay before initialization to ensure proper surface setup
-            this.scheduleOnce(() => {
-              this.initializeHotUpdate();
-            }, 0.5);
-          } catch (error) {
-            console.error('Failed to initialize hot update:', error);
-            this.statusLabel.string = 'Failed to initialize hot update';
-          }
-        }
-        initializeHotUpdate() {
           try {
             var _this$manifestUrl;
             // Ensure storage directory exists
@@ -469,17 +365,11 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
             console.log('Storage path:', this.storagePath);
             console.log('Manifest URL:', (_this$manifestUrl = this.manifestUrl) == null ? void 0 : _this$manifestUrl.nativeUrl);
 
-            // Create AssetsManager instance with proper cleanup
-            if (this.assetsManager) {
-              this.assetsManager.setEventCallback(null);
-              this.assetsManager = null;
-            }
-
-            // Create new AssetsManager instance
+            // Create AssetsManager instance
             this.assetsManager = new native.AssetsManager(this.manifestUrl.nativeUrl, this.storagePath);
 
-            // Configure AssetsManager with reduced concurrent tasks
-            this.assetsManager.setMaxConcurrentTask(2); // Reduced from 3 to 2
+            // Configure AssetsManager
+            this.assetsManager.setMaxConcurrentTask(3);
 
             // Set version comparison function
             this.assetsManager.setVersionCompareHandle((versionA, versionB) => {
@@ -495,10 +385,8 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
             this.updateListener = event => this.updateCallback(event);
             this.assetsManager.setEventCallback(this.updateListener);
 
-            // Load local manifest with delay
-            this.scheduleOnce(() => {
-              this.loadLocalManifest();
-            }, 0.1);
+            // Load local manifest
+            this.loadLocalManifest();
             this.statusLabel.string = 'Hot update initialized';
           } catch (error) {
             console.error('Failed to initialize hot update:', error);
@@ -507,16 +395,8 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
         }
         loadLocalManifest() {
           var _this$manifestUrl2;
-          if (!this.assetsManager || !((_this$manifestUrl2 = this.manifestUrl) != null && _this$manifestUrl2.nativeUrl)) {
-            var _this$manifestUrl3;
-            console.error('Cannot load local manifest:', {
-              hasAssetsManager: !!this.assetsManager,
-              hasManifestUrl: !!((_this$manifestUrl3 = this.manifestUrl) != null && _this$manifestUrl3.nativeUrl)
-            });
-            return;
-          }
+          if (!this.assetsManager || !((_this$manifestUrl2 = this.manifestUrl) != null && _this$manifestUrl2.nativeUrl)) return;
           try {
-            console.log('Loading local manifest from:', this.manifestUrl.nativeUrl);
             this.assetsManager.loadLocalManifest(this.manifestUrl.nativeUrl);
 
             // Setup search paths after manifest loads
@@ -525,40 +405,30 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
             }, 0.1);
           } catch (error) {
             console.error('Failed to load local manifest:', error);
-            this.statusLabel.string = 'Failed to load local manifest';
           }
         }
         setupInitialSearchPaths() {
-          if (!this.assetsManager) {
-            console.error('Cannot setup search paths:', {
-              isNative: NATIVE,
-              hasAssetsManager: !!this.assetsManager
-            });
-            return;
-          }
-          try {
-            // Check if we have stored search paths from previous update
-            const storedPaths = sys.localStorage.getItem('HotUpdateSearchPaths');
-            if (storedPaths) {
-              try {
-                const paths = JSON.parse(storedPaths);
-                native.fileUtils.setSearchPaths(paths);
-                console.log('Restored search paths from storage:', paths);
-                return;
-              } catch (e) {
-                console.error('Failed to parse stored search paths:', e);
-              }
-            }
+          if (!this.assetsManager) return;
 
-            // Default setup if no stored paths
-            const searchPaths = native.fileUtils.getSearchPaths();
-            if (searchPaths.indexOf(this.storagePath) === -1) {
-              searchPaths.unshift(this.storagePath);
-              native.fileUtils.setSearchPaths(searchPaths);
-              console.log('Initial search paths setup:', searchPaths);
+          // Check if we have stored search paths from previous updates
+          const storedPaths = sys.localStorage.getItem('HotUpdateSearchPaths');
+          if (storedPaths) {
+            try {
+              const paths = JSON.parse(storedPaths);
+              native.fileUtils.setSearchPaths(paths);
+              console.log('Restored search paths from storage:', paths);
+              return;
+            } catch (e) {
+              console.error('Failed to parse stored search paths:', e);
             }
-          } catch (error) {
-            console.error('Failed to setup search paths:', error);
+          }
+
+          // Default setup if no stored paths
+          const searchPaths = native.fileUtils.getSearchPaths();
+          if (searchPaths.indexOf(this.storagePath) === -1) {
+            searchPaths.unshift(this.storagePath);
+            native.fileUtils.setSearchPaths(searchPaths);
+            console.log('Initial search paths setup:', searchPaths);
           }
         }
         setupUI() {
@@ -571,32 +441,15 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           }
         }
         checkForUpdate() {
-          var _this$manifestUrl4;
-          if (!this.assetsManager || this.updating) {
-            console.log('Cannot check for update:', {
-              isNative: NATIVE,
-              hasAssetsManager: !!this.assetsManager,
-              isUpdating: this.updating
-            });
-            return;
-          }
-          console.log("Starting update check...");
-          console.log("Current manifest URL:", (_this$manifestUrl4 = this.manifestUrl) == null ? void 0 : _this$manifestUrl4.nativeUrl);
-          console.log("Storage path:", this.storagePath);
+          if (!this.assetsManager || this.updating) return;
+          console.log("Checking for updates...");
           this.updating = true;
           this.canRetry = false;
           this.checkUpdateBtn.node.active = false;
           this.retryBtn.node.active = false;
           this.statusLabel.string = 'Checking for updates...';
           this.progressBar.progress = 0;
-          try {
-            // Check for updates
-            this.assetsManager.checkUpdate();
-          } catch (error) {
-            console.error('Error during checkUpdate:', error);
-            this.statusLabel.string = 'Failed to check for updates';
-            this.onUpdateFinished(false);
-          }
+          this.assetsManager.checkUpdate();
         }
         retry() {
           if (!this.canRetry) return;
@@ -607,40 +460,35 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
         }
         updateCallback(event) {
           const eventCode = event.getEventCode();
-          console.log("Update event code:", eventCode, "Message:", event.getMessage());
+          console.log("Update event code:", eventCode);
           switch (eventCode) {
             case native.EventAssetsManager.ERROR_NO_LOCAL_MANIFEST:
-              console.error("No local manifest file found");
               this.statusLabel.string = 'No local manifest file found';
+              console.log("No local manifest file found");
               this.onUpdateFinished(false);
               break;
             case native.EventAssetsManager.ERROR_DOWNLOAD_MANIFEST:
-              console.error("Failed to download manifest:", event.getMessage());
               this.statusLabel.string = 'Failed to download manifest';
+              console.log("Failed to download manifest");
               this.onUpdateFinished(false);
               break;
             case native.EventAssetsManager.ERROR_PARSE_MANIFEST:
-              console.error("Failed to parse manifest:", event.getMessage());
               this.statusLabel.string = 'Failed to parse manifest';
+              console.log("Failed to parse manifest");
               this.onUpdateFinished(false);
               break;
             case native.EventAssetsManager.NEW_VERSION_FOUND:
-              console.log("New version found, starting download...");
               this.statusLabel.string = 'New version found, starting download...';
-              try {
-                this.assetsManager.update();
-              } catch (error) {
-                console.error('Error during update:', error);
-                this.statusLabel.string = 'Failed to start update';
-                this.onUpdateFinished(false);
-              }
+              console.log("New version found, starting download...");
+              this.assetsManager.update();
               break;
             case native.EventAssetsManager.ALREADY_UP_TO_DATE:
-              console.log("Already up to date");
               this.statusLabel.string = 'Already up to date';
+              console.log("Already up to date");
               this.onUpdateFinished(true);
               break;
             case native.EventAssetsManager.UPDATE_PROGRESSION:
+              console.log("Update progression");
               this.handleUpdateProgress(event);
               break;
             case native.EventAssetsManager.ASSET_UPDATED:
@@ -649,57 +497,67 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
             case native.EventAssetsManager.ERROR_UPDATING:
               const assetId = event.getAssetId();
               const message = event.getMessage();
-              console.error(`Failed to update asset: ${assetId}, Message: ${message}`);
               this.statusLabel.string = `Failed to update asset: ${assetId}`;
+              console.log(`Failed asset: ${assetId}, Message: ${message}`);
               this.onUpdateFinished(false);
               break;
             case native.EventAssetsManager.UPDATE_FINISHED:
-              console.log("Update completed! Applying changes...");
               this.statusLabel.string = 'Update completed! Applying changes...';
+              console.log("Update completed! Applying changes...");
               this.handleUpdateFinished();
               break;
             case native.EventAssetsManager.UPDATE_FAILED:
-              console.error("Update failed:", event.getMessage());
               this.statusLabel.string = 'Update failed: ' + event.getMessage();
+              console.log("Update failed:", event.getMessage());
               this.canRetry = true;
               this.retryBtn.node.active = true;
               this.onUpdateFinished(false);
               break;
             case native.EventAssetsManager.ERROR_DECOMPRESS:
-              console.error("Decompression failed:", event.getMessage());
               this.statusLabel.string = 'Decompression failed';
+              console.log("Decompression failed");
               this.onUpdateFinished(false);
               break;
           }
         }
         handleUpdateFinished() {
           try {
-            // Ensure storage directory exists
+            console.log('Update finished, applying hot update...');
+
+            // Ensure the directory exists
             if (!native.fileUtils.isDirectoryExist(this.storagePath)) {
               native.fileUtils.createDirectory(this.storagePath);
             }
 
-            // Update search paths
-            const searchPaths = native.fileUtils.getSearchPaths();
-            if (searchPaths.indexOf(this.storagePath) === -1) {
-              searchPaths.unshift(this.storagePath);
-              native.fileUtils.setSearchPaths(searchPaths);
+            // Verify downloaded files
+            const files = native.fileUtils.listFiles(this.storagePath);
+            console.log('Files in hot update directory:', files);
+            if (!files || files.length === 0) {
+              console.error('No files found in hot update directory');
+              this.statusLabel.string = 'Update failed: No files downloaded';
+              return;
             }
 
-            // Store the update path
-            sys.localStorage.setItem('HotUpdateSearchPaths', JSON.stringify(searchPaths));
+            // Update search paths first
+            this.updateSearchPaths(this.storagePath);
 
-            // Clear asset cache and reload
+            // Clear asset cache before applying update
             this.clearAssetCache();
 
-            // Add a delay before reloading to ensure files are properly written
+            // Apply the hot update
+            this.applyHotUpdate(this.storagePath);
+
+            // Store the update path
+            sys.localStorage.setItem('hotUpdateReady', 'true');
+            sys.localStorage.setItem('hotUpdatePath', this.storagePath);
+
+            // Reload assets with a delay
             this.scheduleOnce(() => {
               this.reloadUpdatedAssets();
-            }, 2.0); // Increased delay to 2 seconds
+            }, 1.0);
           } catch (error) {
             console.error('Error in handleUpdateFinished:', error);
             this.statusLabel.string = 'Failed to apply update';
-            this.onUpdateFinished(false);
           }
         }
         handleUpdateProgress(event) {
@@ -740,7 +598,6 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           game.restart();
         }
         compareVersion(versionA, versionB) {
-          console.log(versionA, versionB);
           const parseVersion = version => {
             return version.split('.').map(v => parseInt(v) || 0);
           };
@@ -765,29 +622,8 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
         onDestroy() {
-          // Proper cleanup
-          if (this.assetsManager) {
+          if (this.assetsManager && this.updateListener) {
             this.assetsManager.setEventCallback(null);
-            this.assetsManager = null;
-          }
-
-          // Clear any scheduled tasks
-          this.unscheduleAllCallbacks();
-
-          // Clear event listeners
-          if (this.checkUpdateBtn) {
-            this.checkUpdateBtn.node.off('click', this.checkForUpdate, this);
-          }
-          if (this.retryBtn) {
-            this.retryBtn.node.off('click', this.retry, this);
-          }
-
-          // Release all assets
-          assetManager.releaseAll();
-
-          // Force garbage collection if possible
-          if (native.garbageCollect) {
-            native.garbageCollect();
           }
         }
       }, (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "manifestUrl", [_dec2], {

@@ -1,12 +1,4 @@
 System.register([], function(_export, _context) { return { execute: function () {
-System.register("chunks:///_virtual/env", [], function (exports) {
-  return {
-    execute: function () {
-      const NATIVE = exports('NATIVE', true);
-    }
-  };
-});
-
 System.register("chunks:///_virtual/rollupPluginModLoBabelHelpers.js", [], function (exports) {
   return {
     execute: function () {
