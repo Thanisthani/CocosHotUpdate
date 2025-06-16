@@ -23,7 +23,7 @@ System.register("chunks:///_virtual/GameContent.ts", ['./rollupPluginModLoBabelH
           _initializerDefineProperty(this, "label", _descriptor, this);
         }
         onLoad() {
-          console.log("onLoad is called version 1.0.1");
+          console.log("onLoad is called ");
         }
       }, _descriptor = _applyDecoratedDescriptor(_class2.prototype, "label", [_dec2], {
         configurable: true,
@@ -193,7 +193,7 @@ System.register("chunks:///_virtual/main", ['./GameContent.ts', './HotUpdateSear
 });
 
 System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './env'], function (exports) {
-  var _applyDecoratedDescriptor, _initializerDefineProperty, cclegacy, Asset, Label, ProgressBar, Button, _decorator, Component, native, sys, assetManager, director, game, NATIVE;
+  var _applyDecoratedDescriptor, _initializerDefineProperty, cclegacy, Asset, Label, ProgressBar, Button, _decorator, Component, native, sys, assetManager, director, Canvas, game, NATIVE;
   return {
     setters: [function (module) {
       _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
@@ -210,6 +210,7 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
       sys = module.sys;
       assetManager = module.assetManager;
       director = module.director;
+      Canvas = module.Canvas;
       game = module.game;
     }, function (module) {
       NATIVE = module.NATIVE;
@@ -307,24 +308,27 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
         }
         clearAssetCache() {
           try {
-            // Clear asset manager cache
-            if (assetManager && assetManager.assets) {
-              console.log('Clearing asset cache...');
-              assetManager.assets.clear();
-            }
+            // Clear asset cache
+            assetManager.releaseAll();
 
-            // Clear bundle cache
-            if (assetManager.bundles) {
-              assetManager.bundles.forEach((bundle, name) => {
-                console.log('Releasing bundle:', name);
-                bundle.releaseAll();
-              });
-            }
-
-            // Clear any cached files in the hot update directory
-            const tempPath = this.storagePath + '_temp';
+            // Clear any cached files in temp directory
+            const tempPath = native.fileUtils.getWritablePath() + 'temp/';
             if (native.fileUtils.isDirectoryExist(tempPath)) {
-              native.fileUtils.removeDirectory(tempPath);
+              const tempFiles = native.fileUtils.listFiles(tempPath);
+              if (tempFiles) {
+                tempFiles.forEach(file => {
+                  try {
+                    native.fileUtils.removeFile(file);
+                  } catch (e) {
+                    console.error('Failed to remove temp file:', file, e);
+                  }
+                });
+              }
+            }
+
+            // Force garbage collection if possible
+            if (NATIVE && native.garbageCollect) {
+              native.garbageCollect();
             }
           } catch (error) {
             console.error('Error clearing asset cache:', error);
@@ -349,32 +353,58 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           sys.localStorage.setItem('HotUpdateSearchPaths', JSON.stringify(searchPaths));
         }
         reloadUpdatedAssets() {
-          console.log('Reloading updated assets...');
           try {
-            // Verify files exist before reloading
-            const files = native.fileUtils.listFiles(this.storagePath);
-            console.log('Files to reload:', files);
-            if (!files || files.length === 0) {
-              console.error('No files found for reload');
+            const currentScene = director.getScene();
+            if (!currentScene) {
+              console.error('No current scene found');
               return;
             }
 
-            // Reload current scene
+            // Verify files exist before reloading
+            const files = native.fileUtils.listFiles(this.storagePath);
+            if (!files || files.length === 0) {
+              console.error('No files found in storage path after update');
+              this.statusLabel.string = 'Update failed: No files found';
+              return;
+            }
+            console.log('Files in storage path:', files);
+
+            // Destroy current scene
+            currentScene.destroy();
+
+            // Add a small delay before loading new scene
             this.scheduleOnce(() => {
-              const currentScene = director.getScene();
-              if (currentScene) {
-                console.log('Reloading current scene:', currentScene.name);
-                director.loadScene(currentScene.name, err => {
-                  if (err) {
-                    console.error('Failed to reload scene:', err);
-                  } else {
-                    console.log('Scene reloaded successfully with updated assets');
+              // Load the current scene
+              director.loadScene(currentScene.name, err => {
+                if (err) {
+                  console.error('Failed to reload scene:', err);
+                  this.statusLabel.string = 'Failed to reload scene';
+                  return;
+                }
+
+                // Force a redraw
+                this.scheduleOnce(() => {
+                  const newScene = director.getScene();
+                  if (newScene) {
+                    var _newScene$getComponen;
+                    (_newScene$getComponen = newScene.getComponentInChildren(Canvas)) == null || _newScene$getComponen.scheduleOnce(() => {
+                      var _newScene$getChildByN;
+                      // Force update all nodes
+                      const allNodes = ((_newScene$getChildByN = newScene.getChildByName('Canvas')) == null ? void 0 : _newScene$getChildByN.children) || [];
+                      allNodes.forEach(node => {
+                        node.active = false;
+                        node.active = true;
+                      });
+                    }, 0.1);
                   }
-                });
-              }
+                }, 0.5);
+                console.log('Scene reloaded successfully');
+                this.statusLabel.string = 'Update completed successfully';
+              });
             }, 0.5);
           } catch (error) {
-            console.error('Error in reloadUpdatedAssets:', error);
+            console.error('Error reloading assets:', error);
+            this.statusLabel.string = 'Failed to reload assets';
           }
         }
         initHotUpdate() {
@@ -603,42 +633,44 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
         }
         handleUpdateFinished() {
           try {
-            console.log('Update finished, applying hot update...');
-
-            // Ensure the directory exists
+            // Ensure storage directory exists
             if (!native.fileUtils.isDirectoryExist(this.storagePath)) {
               native.fileUtils.createDirectory(this.storagePath);
             }
 
-            // Verify downloaded files
+            // Clear any existing files in the storage path
             const files = native.fileUtils.listFiles(this.storagePath);
-            console.log('Files in hot update directory:', files);
-            if (!files || files.length === 0) {
-              console.error('No files found in hot update directory');
-              this.statusLabel.string = 'Update failed: No files downloaded';
-              return;
+            if (files && files.length > 0) {
+              files.forEach(file => {
+                try {
+                  native.fileUtils.removeFile(file);
+                } catch (e) {
+                  console.error('Failed to remove file:', file, e);
+                }
+              });
             }
 
-            // Update search paths first
-            this.updateSearchPaths(this.storagePath);
-
-            // Clear asset cache before applying update
-            this.clearAssetCache();
-
-            // Apply the hot update
-            this.applyHotUpdate(this.storagePath);
+            // Update search paths
+            const searchPaths = native.fileUtils.getSearchPaths();
+            if (searchPaths.indexOf(this.storagePath) === -1) {
+              searchPaths.unshift(this.storagePath);
+              native.fileUtils.setSearchPaths(searchPaths);
+            }
 
             // Store the update path
-            sys.localStorage.setItem('hotUpdateReady', 'true');
-            sys.localStorage.setItem('hotUpdatePath', this.storagePath);
+            sys.localStorage.setItem('HotUpdateSearchPaths', JSON.stringify(searchPaths));
 
-            // Reload assets with a delay
+            // Clear asset cache and reload
+            this.clearAssetCache();
+
+            // Add a delay before reloading to ensure files are properly written
             this.scheduleOnce(() => {
               this.reloadUpdatedAssets();
-            }, 1.0);
+            }, 1.0); // Increased delay to 1 second
           } catch (error) {
             console.error('Error in handleUpdateFinished:', error);
             this.statusLabel.string = 'Failed to apply update';
+            this.onUpdateFinished(false);
           }
         }
         handleUpdateProgress(event) {
