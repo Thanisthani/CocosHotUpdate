@@ -23,7 +23,7 @@ System.register("chunks:///_virtual/GameContent.ts", ['./rollupPluginModLoBabelH
           _initializerDefineProperty(this, "label", _descriptor, this);
         }
         onLoad() {
-          console.log("onLoad is called ");
+          console.log("onLoad is called updated ");
         }
       }, _descriptor = _applyDecoratedDescriptor(_class2.prototype, "label", [_dec2], {
         configurable: true,
@@ -308,7 +308,7 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
         }
         clearAssetCache() {
           try {
-            // Clear asset cache
+            // Release all assets first
             assetManager.releaseAll();
 
             // Clear any cached files in temp directory
@@ -329,6 +329,18 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
             // Force garbage collection if possible
             if (NATIVE && native.garbageCollect) {
               native.garbageCollect();
+            }
+
+            // Clear texture cache
+            if (assetManager.assets) {
+              assetManager.assets.clear();
+            }
+
+            // Clear bundle cache
+            if (assetManager.bundles) {
+              assetManager.bundles.forEach((bundle, name) => {
+                bundle.releaseAll();
+              });
             }
           } catch (error) {
             console.error('Error clearing asset cache:', error);
@@ -369,39 +381,49 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
             }
             console.log('Files in storage path:', files);
 
+            // Store current scene name
+            const sceneName = currentScene.name;
+
             // Destroy current scene
             currentScene.destroy();
 
             // Add a small delay before loading new scene
             this.scheduleOnce(() => {
               // Load the current scene
-              director.loadScene(currentScene.name, err => {
+              director.loadScene(sceneName, err => {
                 if (err) {
                   console.error('Failed to reload scene:', err);
                   this.statusLabel.string = 'Failed to reload scene';
                   return;
                 }
 
-                // Force a redraw
+                // Force a redraw with increased delay
                 this.scheduleOnce(() => {
                   const newScene = director.getScene();
                   if (newScene) {
-                    var _newScene$getComponen;
-                    (_newScene$getComponen = newScene.getComponentInChildren(Canvas)) == null || _newScene$getComponen.scheduleOnce(() => {
-                      var _newScene$getChildByN;
-                      // Force update all nodes
-                      const allNodes = ((_newScene$getChildByN = newScene.getChildByName('Canvas')) == null ? void 0 : _newScene$getChildByN.children) || [];
-                      allNodes.forEach(node => {
-                        node.active = false;
-                        node.active = true;
-                      });
-                    }, 0.1);
+                    // Wait for textures to load
+                    this.scheduleOnce(() => {
+                      const canvas = newScene.getComponentInChildren(Canvas);
+                      if (canvas) {
+                        var _newScene$getChildByN;
+                        // Force update all nodes
+                        const allNodes = ((_newScene$getChildByN = newScene.getChildByName('Canvas')) == null ? void 0 : _newScene$getChildByN.children) || [];
+                        allNodes.forEach(node => {
+                          // Temporarily disable and re-enable nodes
+                          const wasActive = node.active;
+                          node.active = false;
+                          this.scheduleOnce(() => {
+                            node.active = wasActive;
+                          }, 0.1);
+                        });
+                      }
+                    }, 1.0);
                   }
-                }, 0.5);
+                }, 1.0);
                 console.log('Scene reloaded successfully');
                 this.statusLabel.string = 'Update completed successfully';
               });
-            }, 0.5);
+            }, 1.0);
           } catch (error) {
             console.error('Error reloading assets:', error);
             this.statusLabel.string = 'Failed to reload assets';
@@ -638,18 +660,6 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
               native.fileUtils.createDirectory(this.storagePath);
             }
 
-            // Clear any existing files in the storage path
-            const files = native.fileUtils.listFiles(this.storagePath);
-            if (files && files.length > 0) {
-              files.forEach(file => {
-                try {
-                  native.fileUtils.removeFile(file);
-                } catch (e) {
-                  console.error('Failed to remove file:', file, e);
-                }
-              });
-            }
-
             // Update search paths
             const searchPaths = native.fileUtils.getSearchPaths();
             if (searchPaths.indexOf(this.storagePath) === -1) {
@@ -666,7 +676,7 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
             // Add a delay before reloading to ensure files are properly written
             this.scheduleOnce(() => {
               this.reloadUpdatedAssets();
-            }, 1.0); // Increased delay to 1 second
+            }, 2.0); // Increased delay to 2 seconds
           } catch (error) {
             console.error('Error in handleUpdateFinished:', error);
             this.statusLabel.string = 'Failed to apply update';
