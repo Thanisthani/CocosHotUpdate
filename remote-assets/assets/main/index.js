@@ -23,7 +23,7 @@ System.register("chunks:///_virtual/GameContent.ts", ['./rollupPluginModLoBabelH
           _initializerDefineProperty(this, "label", _descriptor, this);
         }
         onLoad() {
-          console.log("onLoad is called updated ");
+          console.log("onLoad is called ");
         }
       }, _descriptor = _applyDecoratedDescriptor(_class2.prototype, "label", [_dec2], {
         configurable: true,
@@ -193,7 +193,7 @@ System.register("chunks:///_virtual/main", ['./GameContent.ts', './HotUpdateSear
 });
 
 System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLoBabelHelpers.js', 'cc', './env'], function (exports) {
-  var _applyDecoratedDescriptor, _initializerDefineProperty, cclegacy, Asset, Label, ProgressBar, Button, _decorator, Component, native, sys, assetManager, director, Canvas, game, NATIVE;
+  var _applyDecoratedDescriptor, _initializerDefineProperty, cclegacy, Asset, Label, ProgressBar, Button, _decorator, Component, native, sys, assetManager, director, game, NATIVE;
   return {
     setters: [function (module) {
       _applyDecoratedDescriptor = module.applyDecoratedDescriptor;
@@ -210,7 +210,6 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
       sys = module.sys;
       assetManager = module.assetManager;
       director = module.director;
-      Canvas = module.Canvas;
       game = module.game;
     }, function (module) {
       NATIVE = module.NATIVE;
@@ -342,6 +341,14 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
                 bundle.releaseAll();
               });
             }
+
+            // Wait for cleanup to complete
+            this.scheduleOnce(() => {
+              // Additional cleanup if needed
+              if (NATIVE && native.garbageCollect) {
+                native.garbageCollect();
+              }
+            }, 0.5);
           } catch (error) {
             console.error('Error clearing asset cache:', error);
           }
@@ -389,39 +396,51 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
 
             // Add a small delay before loading new scene
             this.scheduleOnce(() => {
-              // Load the current scene
-              director.loadScene(sceneName, err => {
+              // Preload the scene to ensure assets are loaded
+              director.preloadScene(sceneName, (err, scene) => {
                 if (err) {
-                  console.error('Failed to reload scene:', err);
-                  this.statusLabel.string = 'Failed to reload scene';
+                  console.error('Failed to preload scene:', err);
+                  this.statusLabel.string = 'Failed to preload scene';
                   return;
                 }
 
-                // Force a redraw with increased delay
+                // Wait for assets to be fully loaded
                 this.scheduleOnce(() => {
-                  const newScene = director.getScene();
-                  if (newScene) {
-                    // Wait for textures to load
+                  // Now load the scene
+                  director.loadScene(sceneName, err => {
+                    if (err) {
+                      console.error('Failed to reload scene:', err);
+                      this.statusLabel.string = 'Failed to reload scene';
+                      return;
+                    }
+
+                    // Wait for scene to be fully initialized
                     this.scheduleOnce(() => {
-                      const canvas = newScene.getComponentInChildren(Canvas);
-                      if (canvas) {
+                      const newScene = director.getScene();
+                      if (newScene) {
                         var _newScene$getChildByN;
-                        // Force update all nodes
+                        // Disable all nodes first
                         const allNodes = ((_newScene$getChildByN = newScene.getChildByName('Canvas')) == null ? void 0 : _newScene$getChildByN.children) || [];
                         allNodes.forEach(node => {
-                          // Temporarily disable and re-enable nodes
-                          const wasActive = node.active;
                           node.active = false;
-                          this.scheduleOnce(() => {
-                            node.active = wasActive;
-                          }, 0.1);
                         });
+
+                        // Wait for textures to be ready
+                        this.scheduleOnce(() => {
+                          // Re-enable nodes one by one with delay
+                          allNodes.forEach((node, index) => {
+                            this.scheduleOnce(() => {
+                              node.active = true;
+                            }, index * 0.1); // Stagger the activation
+                          });
+
+                          console.log('Scene reloaded successfully');
+                          this.statusLabel.string = 'Update completed successfully';
+                        }, 1.0);
                       }
                     }, 1.0);
-                  }
+                  });
                 }, 1.0);
-                console.log('Scene reloaded successfully');
-                this.statusLabel.string = 'Update completed successfully';
               });
             }, 1.0);
           } catch (error) {
@@ -761,6 +780,14 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           }
           if (this.retryBtn) {
             this.retryBtn.node.off('click', this.retry, this);
+          }
+
+          // Release all assets
+          assetManager.releaseAll();
+
+          // Force garbage collection if possible
+          if (native.garbageCollect) {
+            native.garbageCollect();
           }
         }
       }, (_descriptor = _applyDecoratedDescriptor(_class2.prototype, "manifestUrl", [_dec2], {
