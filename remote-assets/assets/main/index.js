@@ -23,7 +23,7 @@ System.register("chunks:///_virtual/GameContent.ts", ['./rollupPluginModLoBabelH
           _initializerDefineProperty(this, "label", _descriptor, this);
         }
         onLoad() {
-          console.log("onLoad is called version 1.0.6");
+          console.log("onLoad is called version 1.0.1");
         }
       }, _descriptor = _applyDecoratedDescriptor(_class2.prototype, "label", [_dec2], {
         configurable: true,
@@ -376,6 +376,9 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
         // }
 
         reloadCurrentScene() {
+          if (director.getScene()) {
+            director.getScene().destroy();
+          }
           const currentScene = director.getScene();
           if (currentScene) {
             console.log('Reloading current scene:', currentScene.name);
@@ -562,7 +565,8 @@ System.register("chunks:///_virtual/RemoteEntryLoader.ts", ['./rollupPluginModLo
           // Set flags for next startup
           sys.localStorage.setItem('hotUpdateReady', 'true');
           sys.localStorage.setItem('hotUpdatePath', this.storagePath);
-          this.onUpdateFinished(true, true); // Don't need restart since we applied immediately
+
+          // this.onUpdateFinished(true, true); // Don't need restart since we applied immediately
         }
 
         handleUpdateProgress(event) {
